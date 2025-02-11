@@ -1,15 +1,22 @@
-import { Button, Panel } from '@/_ui';
+import { Button, Panel, Txt } from '@/_ui';
 import { Input } from '@/_ui/input/Input';
 import { API_KEY_COOKIE_NAME, SECRET_COOKIE_NAME } from '@/constants/common';
 import { useMutation } from '@tanstack/react-query';
-import { deleteCookie, setCookie } from 'cookies-next';
-import { KeyboardEvent } from 'react';
+import { deleteCookie, getCookie, setCookie } from 'cookies-next';
+import { KeyboardEvent, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 const ApiKeyInputPanel = () => {
     const { getValues, register, handleSubmit, watch } = useForm({ defaultValues: { apiKey: '', secret: '' } });
     const watchForm = watch();
 
+    const [apiKey, setApiKey] = useState('');
+
+    useEffect(() => {
+        if (!!getCookie(API_KEY_COOKIE_NAME)) {
+            setApiKey(getCookie(API_KEY_COOKIE_NAME) as string);
+        }
+    }, [getCookie(API_KEY_COOKIE_NAME)]);
     const mutation = useMutation({
         mutationFn: async ({ apiKey, secret }: { apiKey: string; secret: string }) => {
             setCookie(API_KEY_COOKIE_NAME, apiKey);
@@ -55,6 +62,7 @@ const ApiKeyInputPanel = () => {
             >
                 쿠키 삭제
             </Button>
+            {!!apiKey && <Txt>login api: {apiKey}</Txt>}
         </Panel>
     );
 };

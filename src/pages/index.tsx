@@ -8,9 +8,11 @@ const Page = () => {
     return (
         <View>
             <V.Row css={{ gap: 10, margin: '10px 0', flexWrap: 'wrap', alignItems: 'flex-start' }}>
-                <ApiKeyInputPanel />
+                <V.Column css={{ gap: 10 }}>
+                    <ApiKeyInputPanel />
+                    <AccountPanel />
+                </V.Column>
                 <TickerPanel />
-                <AccountPanel />
             </V.Row>
         </View>
     );

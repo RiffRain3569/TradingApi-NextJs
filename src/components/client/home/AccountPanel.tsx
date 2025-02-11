@@ -19,11 +19,11 @@ const AccountPanel = () => {
             setAsset(coins.filter((el: any) => el?.currency === 'KRW').at(0).balance);
         },
         enabled: !!getCookie(API_KEY_COOKIE_NAME) && !!getCookie(SECRET_COOKIE_NAME),
-        refetchInterval: 1000,
+        refetchInterval: 2000,
     });
 
     return (
-        <Panel title='자산 정보' css={{ maxWidth: '400px' }}>
+        <Panel title='자산 정보' css={{ width: '100%', maxWidth: '480px' }}>
             <Txt>보유자산: {Math.floor(asset)}</Txt>
             {JSON.stringify(coins, null, 4)}
         </Panel>

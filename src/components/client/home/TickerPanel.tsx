@@ -5,6 +5,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 
 const TickerPanel = () => {
+    const [realtime, setRealtime] = useState(false);
     const [coins, setCoins] = useState<any[]>([]);
     const [tickers, setTickers] = useState<any[]>([]);
 
@@ -24,8 +25,8 @@ const TickerPanel = () => {
 
             setTickers(tickers.filter((el: any) => el.acc_trade_price_24h > 1000000000));
         },
-        enabled: coins.length > 0,
-        refetchInterval: 1000,
+        enabled: coins.length > 0 && realtime,
+        refetchInterval: 100,
     });
 
     const mutation = useMutation({
@@ -52,7 +53,12 @@ const TickerPanel = () => {
 
     return (
         <Panel title='현재가 정보' css={{ maxWidth: '600px' }}>
-            <Txt>코인 개수: {tickers.length}</Txt>
+            <V.Row css={{ gap: '10px', justifyContent: 'space-between' }}>
+                <Txt>코인 개수: {tickers.length}</Txt>
+                <Button onClick={() => setRealtime((s) => !s)} css={{ width: 'auto' }}>
+                    {realtime ? '실시간 중지' : '실시간 시작'}
+                </Button>
+            </V.Row>
             <V.Column css={{ gap: '10px' }}>
                 {tickers.map((el, key) => (
                     <V.Row css={{ alignItems: 'center', gap: '10px' }}>
