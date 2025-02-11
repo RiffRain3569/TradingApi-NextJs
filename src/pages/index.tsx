@@ -1,23 +1,17 @@
-import { Spinner, V } from '@/_ui/index';
+import { V } from '@/_ui/index';
 import View from '@/components/_layout/client/View';
-import { useEffect, useState } from 'react';
+import AccountPanel from '@/components/client/home/AccountPanel';
+import ApiKeyInputPanel from '@/components/client/home/ApiKeyInputPanel';
+import TickerPanel from '@/components/client/home/TickerPanel';
 
 const Page = () => {
-    const [isLoad, setLoad] = useState(false);
-
-    useEffect(() => {
-        setLoad(true);
-    }, []);
-
-    if (!isLoad)
-        return (
-            <View>
-                <Spinner />
-            </View>
-        );
     return (
         <View>
-            <V.Row css={{ gap: 10, margin: '10px 0', flexWrap: 'wrap', alignItems: 'flex-start' }}></V.Row>
+            <V.Row css={{ gap: 10, margin: '10px 0', flexWrap: 'wrap', alignItems: 'flex-start' }}>
+                <ApiKeyInputPanel />
+                <TickerPanel />
+                <AccountPanel />
+            </V.Row>
         </View>
     );
 };
