@@ -4,7 +4,7 @@ import { GlobalTheme } from './GlobalTheme';
 import Header from './Header';
 
 const View = ({ children }: { children: ReactNode }) => {
-    const width = '1400px';
+    const width = '100%';
 
     return (
         <>
