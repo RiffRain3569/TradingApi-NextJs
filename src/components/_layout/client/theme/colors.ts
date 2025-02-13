@@ -25,4 +25,18 @@ export const colors = {
         contrastText: '#EDEDED',
         disableText: '#A9A9A9',
     },
+    bid: {
+        light: '#eb3341',
+        main: '#E60012',
+        dark: '#a1000c',
+        contrastText: '#EDEDED',
+        disableText: '#A9A9A9',
+    },
+    ask: {
+        light: '#337dff',
+        main: '#005DFF',
+        dark: '#0041b2',
+        contrastText: '#EDEDED',
+        disableText: '#A9A9A9',
+    },
 };

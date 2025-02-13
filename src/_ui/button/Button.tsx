@@ -3,7 +3,7 @@ import { ButtonHTMLAttributes } from 'react';
 import Spinner from '../custom/Spinner';
 
 type Types = {
-    color?: 'primary' | 'secondary';
+    color?: 'primary' | 'secondary' | 'bid' | 'ask';
     loading?: boolean;
 } & Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'color'>;
 

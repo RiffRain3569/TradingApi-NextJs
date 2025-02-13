@@ -34,10 +34,10 @@ export const getOrder = async ({ market }: { market: string }) => {
 
 type OrderTypes = {
     market: string;
-    side: 'bid' | 'ask';
+    side: 'bid' | 'ask'; // 매수, 매도
     volume?: string; // 지장가, 시장가 매도 시 필수
     price?: string; // 지정가, 시장가 매수 시 필수
-    ord_type: 'limit' | 'price' | 'market'; // 지정가, 시장가 (매수), 시장가(매도)
+    ord_type: 'limit' | 'price' | 'market'; // 지정가, 시장가(매수), 시장가(매도)
 };
 
 export const postOrder = async ({ ...rest }: OrderTypes) => {
@@ -45,5 +45,13 @@ export const postOrder = async ({ ...rest }: OrderTypes) => {
         uri: `/v1/orders`,
         method: POST,
         reqData: { ...rest },
+    });
+};
+
+export const getOrderBook = async ({ markets }: { markets: string[] }) => {
+    return await bithumbPrivateApi({
+        uri: `/v1/orderbook`,
+        method: GET,
+        reqData: { markets: markets.join(',') },
     });
 };

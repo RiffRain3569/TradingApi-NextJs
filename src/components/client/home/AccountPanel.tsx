@@ -17,6 +17,7 @@ const AccountPanel = () => {
             const coins = await getAccount();
             setCoins(coins);
             setAsset(coins.filter((el: any) => el?.currency === 'KRW').at(0).balance);
+            return 'ok';
         },
         enabled: !!getCookie(API_KEY_COOKIE_NAME) && !!getCookie(SECRET_COOKIE_NAME),
         refetchInterval: 2000,

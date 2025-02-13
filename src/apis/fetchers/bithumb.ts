@@ -1,6 +1,6 @@
 import { API_KEY_COOKIE_NAME, SECRET_COOKIE_NAME } from '@/constants/common';
 import { GET } from '@/constants/httpMethod';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { getCookie } from 'cookies-next';
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
@@ -109,12 +109,12 @@ export const bithumbPrivateApi = async ({
         .then((response) => {
             return response.data;
         })
-        .catch((error) => {
-            throw !!error?.code // http 에러 코드
-                ? { error: error.code, message: error.message }
-                : {
-                      error: 'CONNECT_ERROR',
-                      message: '통신이 원활하지 않습니다.',
-                  };
+        .catch((error: AxiosError) => {
+            console.log(error?.response?.data);
+            const data: any = error?.response?.data;
+            throw {
+                error: data?.error?.name,
+                message: data?.error?.message,
+            };
         });
 };

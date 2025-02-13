@@ -13,5 +13,6 @@ import { V } from './div/V';
 import { Select } from './input/Select';
 
 import Txt from './typography/Txt';
+import TxtSpan from './typography/TxtSpan';
 
-export { Button, Card, LttPick, NumberButton, Panel, PositionButton, Select, Spinner, Txt, V };
+export { Button, Card, LttPick, NumberButton, Panel, PositionButton, Select, Spinner, Txt, TxtSpan, V };
