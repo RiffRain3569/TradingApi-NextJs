@@ -39,12 +39,7 @@ const Header = ({ width, height }: { width?: string | number; height?: string | 
                     <Link href='/' css={{ display: 'flex', marginRight: 20 }}>
                         <Image src='/favicon/favicon.svg' alt='logo' width={40} height={40} />
                     </Link>
-                    {[
-                        { path: '/components/card', value: 'Cards' },
-                        { path: '/components/table', value: 'Tables' },
-                        { path: '/components/input', value: 'Inputs' },
-                        { path: '/components/icon', value: 'Icons' },
-                    ].map((el, idx) => (
+                    {[{ path: '/bithumb', value: 'Bithumb' }].map((el, idx) => (
                         <Link href={el.path} css={{ width: 60 }} key={idx}>
                             <Txt
                                 size={16}
@@ -62,26 +57,7 @@ const Header = ({ width, height }: { width?: string | number; height?: string | 
                         alignItems: 'center',
                         gap: 20,
                     }}
-                >
-                    <Link href={'/cart'}>
-                        <Txt
-                            size={16}
-                            weight={router.pathname === '/cart' ? 'bold' : 'normal'}
-                            css={{ '&:hover': { fontWeight: 'bold' } }}
-                        >
-                            Cart
-                        </Txt>
-                    </Link>
-                    <Link href={'/mypage'}>
-                        <Txt
-                            size={16}
-                            weight={router.pathname === '/mypage' ? 'bold' : 'normal'}
-                            css={{ '&:hover': { fontWeight: 'bold' } }}
-                        >
-                            Profile
-                        </Txt>
-                    </Link>
-                </div>
+                ></div>
             </div>
         </header>
     );
