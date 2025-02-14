@@ -9,21 +9,14 @@ const View = ({ children }: { children: ReactNode }) => {
     return (
         <>
             <Head>
-                <title>PLN</title>
+                <title>Trading Api</title>
             </Head>
 
             <GlobalTheme />
 
             <Header width={width} />
 
-            <main
-                css={{
-                    maxWidth: width,
-                    margin: 'auto',
-                }}
-            >
-                {children}
-            </main>
+            <main css={{ maxWidth: width, margin: 'auto' }}>{children}</main>
         </>
     );
 };
