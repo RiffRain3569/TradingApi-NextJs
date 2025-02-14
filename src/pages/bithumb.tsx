@@ -8,11 +8,11 @@ import TickerPanel from '@/components/client/bithumb/TickerPanel';
 import { targetTickerStore } from '@/store/bithumb';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 
 const Page = () => {
     const [realtime, setRealtime] = useState(false);
-    const ticker = useRecoilValue(targetTickerStore);
+    const [ticker, setTicker] = useRecoilState(targetTickerStore);
 
     const { data: coins } = useQuery({
         queryKey: ['bithumb_coins'],
@@ -36,6 +36,9 @@ const Page = () => {
 
             mergedList.sort((a: any, b: any) => b.signed_change_rate - a.signed_change_rate);
 
+            if (!ticker?.market) {
+                setTicker(mergedList.at(0));
+            }
             return mergedList;
         },
         enabled: (coins || []).length > 0 && realtime,
