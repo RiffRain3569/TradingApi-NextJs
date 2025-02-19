@@ -1,3 +1,4 @@
+import { Button, Panel, Txt } from '@/_ui';
 import View from '@/components/_layout/client/View';
 import { useEffect, useState } from 'react';
 
@@ -9,9 +10,12 @@ const Page = () => {
     useEffect(() => {
         const socket = new WebSocket('ws://localhost:3000/api/ws/bithumb');
 
-        socket.onopen = () => console.log('Connected to WebSocket server');
-        socket.onmessage = (event) => setMessages((prev) => [...prev, event.data]);
-        socket.onclose = () => console.log('WebSocket closed');
+        console.log('Connecting to WebSocket...');
+        socket.onopen = () => console.log('Connected to WebSocket');
+        socket.onmessage = (event) => {
+            setMessages((prev) => [...prev, event.data]);
+        };
+        socket.onclose = () => console.log('WebSocket disconnected');
 
         setWs(socket);
 
@@ -19,7 +23,7 @@ const Page = () => {
     }, []);
 
     const sendMessage = () => {
-        if (ws && input.trim()) {
+        if (ws && input) {
             ws.send(input);
             setInput('');
         }
@@ -27,7 +31,17 @@ const Page = () => {
 
     return (
         <View>
-            <div></div>
+            <Panel>
+                {messages.map((msg, idx) => (
+                    <Txt key={idx}>{msg}</Txt>
+                ))}
+            </Panel>
+
+            <Panel>
+                <input value={input} onChange={(e) => setInput(e.target.value)} placeholder='Type a message...' />
+
+                <Button onClick={sendMessage}>Send</Button>
+            </Panel>
         </View>
     );
 };
