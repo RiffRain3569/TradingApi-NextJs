@@ -32,16 +32,14 @@ const Page = () => {
     }, [ws]); // `ws`가 변경될 때마다 실행
 
     useEffect(() => {
-        if (queue.length > 0) {
-            const { data } = getLastData(1);
-            if (!!data) {
-                if (!ticker.market) {
-                    setTicker(data.tickers.at(0));
-                }
-                setTickers(data.tickers);
+        const data = getLastData(1);
+        if (!!data) {
+            if (!ticker.market) {
+                setTicker(data.data.tickers.at(0));
             }
+            setTickers(data.data.tickers);
         }
-    }, [queue]);
+    }, [getLastData(1)]);
 
     //////////////////////////////////////////
     // test code

@@ -21,7 +21,18 @@ export const useWebsocket = ({ exchange }: { exchange: 'bithumb' }) => {
             setWs(socket);
         };
         socket.onmessage = (event) => {
-            setQueue((s) => [...s, JSON.parse(event.data)]);
+            setQueue((s) => {
+                const data = JSON.parse(event.data);
+                // 기존 아이템에서 id가 중복되는 경우, 덮어쓰기
+                const updatedItems = s.map((el) => (el.id === data.id ? { ...el, ...data } : el));
+
+                // 새로운 id인 경우 리스트에 추가
+                if (!updatedItems.some((el) => el.id === data.id)) {
+                    updatedItems.push(data);
+                }
+
+                return updatedItems;
+            });
         };
         socket.onclose = () => {
             console.log('WebSocket disconnected');
@@ -30,17 +41,9 @@ export const useWebsocket = ({ exchange }: { exchange: 'bithumb' }) => {
         return () => socket.close();
     }, []);
 
-    const getDataList = (id: number): any[] => {
-        const result = queue.filter((el) => el.id === id);
-        setQueue((s) => s.filter((el) => el.id !== id));
-        return result;
-    };
-
     const getLastData = (id: number): any => {
-        const result = queue.filter((el) => el.id === id);
-        setQueue((s) => s.filter((el) => el.id !== id));
-        return result.length > 0 ? result.at(-1) : undefined;
+        return queue.find((el) => el.id === id);
     };
 
-    return { ws, queue, getLastData, getDataList };
+    return { ws, queue, getLastData };
 };

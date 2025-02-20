@@ -35,14 +35,12 @@ const AccountPanel = () => {
     }, [ws, getCookie(API_KEY_COOKIE_NAME)]); // `ws`가 변경될 때마다 실행
 
     useEffect(() => {
-        if (queue.length > 0) {
-            const data = getLastData(2);
-            if (!!data) {
-                setAccountList(data.data);
-                setAsset(data.data.find((el: any) => el?.currency === 'KRW')?.balance);
-            }
+        const data = getLastData(2);
+        if (!!data) {
+            setAccountList(data.data);
+            setAsset(data.data.find((el: any) => el?.currency === 'KRW')?.balance);
         }
-    }, [queue]);
+    }, [getLastData(2)]);
 
     const ListItem = memo(({ el }: { el: any }) => {
         return (
