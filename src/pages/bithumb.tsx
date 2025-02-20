@@ -1,50 +1,47 @@
 import { V } from '@/_ui/index';
-import { getCoins, getTicker } from '@/apis/client/bithumb';
 import View from '@/components/_layout/client/View';
 import AccountPanel from '@/components/client/bithumb/AccountPanel';
 import ApiKeyInputPanel from '@/components/client/bithumb/ApiKeyInputPanel';
 import CandleTestPanel from '@/components/client/bithumb/CandleTestPanel';
 import DetailPanel from '@/components/client/bithumb/DetailPanel';
 import TickerPanel from '@/components/client/bithumb/TickerPanel';
+import { useWebsocket } from '@/hooks/useWebsocket';
 import { targetTickerStore } from '@/store/bithumb';
-import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 
 const Page = () => {
-    const [realtime, setRealtime] = useState(false);
+    const [tickers, setTickers] = useState<any[]>([]);
     const [ticker, setTicker] = useRecoilState(targetTickerStore);
 
-    const { data: coins } = useQuery({
-        queryKey: ['bithumb_coins'],
-        queryFn: async () => {
-            const coins = await getCoins({});
+    const { ws, queue, getLastData } = useWebsocket({ exchange: 'bithumb' });
 
-            return coins.filter((el: any) => el.market.split('-').at(0) === 'KRW');
-        },
-    });
+    useEffect(() => {
+        // WebSocket 연결이 되어있을 때만 1초마다 메시지를 전송
+        if (ws) {
+            const interval = setInterval(() => {
+                ws.send(JSON.stringify({ id: 1, method: 'tickers' }));
+            }, 1000); // 1초마다 메시지 전송
 
-    const { data: tickers } = useQuery({
-        queryKey: ['bithumb_ticker'],
-        queryFn: async () => {
-            const tickers = await getTicker({ markets: (coins || []).map((coin: any) => coin.market).join(',') });
-            const mergedList = Object.values(
-                [...coins, ...tickers].reduce((acc, item) => {
-                    acc[item.market] = { ...acc[item.market], ...item };
-                    return acc;
-                }, {})
-            ).filter((el: any) => el.market !== 'KRW-NFT' && el.market !== 'KRW-BTT');
+            // 컴포넌트 언마운트 시 interval 해제
+            return () => {
+                clearInterval(interval);
+                console.log('Interval cleared');
+            };
+        }
+    }, [ws]); // `ws`가 변경될 때마다 실행
 
-            const sortedList = mergedList.sort((a: any, b: any) => b.signed_change_rate - a.signed_change_rate);
-
-            if (!ticker?.market) {
-                setTicker(sortedList.at(0));
+    useEffect(() => {
+        if (queue.length > 0) {
+            const { data } = getLastData(1);
+            if (!!data) {
+                if (!ticker.market) {
+                    setTicker(data.tickers.at(0));
+                }
+                setTickers(data.tickers);
             }
-            return sortedList;
-        },
-        enabled: (coins || []).length > 0 && realtime,
-        refetchInterval: 200,
-    });
+        }
+    }, [queue]);
 
     //////////////////////////////////////////
     // test code
@@ -86,7 +83,7 @@ const Page = () => {
                     <AccountPanel />
                     <DetailPanel ticker={ticker} />
                 </V.Column>
-                <TickerPanel tickers={tickers || []} onRealtimeClick={(el) => setRealtime(el)} />
+                <TickerPanel tickers={tickers} />
                 <CandleTestPanel />
             </V.Row>
         </View>

@@ -1,7 +1,5 @@
-import { API_KEY_COOKIE_NAME, SECRET_COOKIE_NAME } from '@/constants/common';
 import { GET } from '@/constants/httpMethod';
 import axios, { AxiosError } from 'axios';
-import { getCookie } from 'cookies-next';
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import { parse, stringify } from 'qs';
@@ -58,6 +56,8 @@ type PrivateTypes = {
     reqData?: any;
     options?: any;
     contentType?: string;
+    apiKey: string;
+    secret: string;
 };
 export const bithumbPrivateApi = async ({
     uri,
@@ -65,10 +65,9 @@ export const bithumbPrivateApi = async ({
     reqData,
     options = {},
     contentType = 'application/json; charset=UTF-8',
+    apiKey,
+    secret,
 }: PrivateTypes) => {
-    const apiKey = getCookie(API_KEY_COOKIE_NAME);
-    const secret = getCookie(SECRET_COOKIE_NAME);
-
     if (!apiKey || !secret) {
         alert('ApiKey 와 Secret key를 등록해주세요.');
         throw new Error('ApiKey 와 Secret key를 등록해주세요.');

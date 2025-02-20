@@ -1,36 +1,71 @@
 import { AssetCard, Panel, Txt, V } from '@/_ui';
-import { getAccount } from '@/apis/client/bithumb';
 import { API_KEY_COOKIE_NAME, SECRET_COOKIE_NAME } from '@/constants/common';
+import { useWebsocket } from '@/hooks/useWebsocket';
 import { assetStore } from '@/store/bithumb';
-import { useQuery } from '@tanstack/react-query';
 import { getCookie } from 'cookies-next';
+import { memo, useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 
 const AccountPanel = () => {
+    const [accountList, setAccountList] = useState<any[]>([]);
     const [asset, setAsset] = useRecoilState(assetStore);
 
-    const { data, refetch } = useQuery({
-        queryKey: ['account'],
-        queryFn: async () => {
-            const coins = await getAccount();
-            setAsset(coins.filter((el: any) => el?.currency === 'KRW').at(0).balance);
-            return coins;
-        },
-        enabled: !!getCookie(API_KEY_COOKIE_NAME) && !!getCookie(SECRET_COOKIE_NAME),
-        refetchInterval: 2000,
+    const { ws, queue, getLastData } = useWebsocket({ exchange: 'bithumb' });
+
+    useEffect(() => {
+        // WebSocket 연결이 되어있을 때만 1초마다 메시지를 전송
+        if (ws && !!getCookie(API_KEY_COOKIE_NAME)) {
+            const interval = setInterval(() => {
+                ws.send(
+                    JSON.stringify({
+                        id: 2,
+                        method: 'account',
+                        apiKey: getCookie(API_KEY_COOKIE_NAME),
+                        secret: getCookie(SECRET_COOKIE_NAME),
+                    })
+                );
+            }, 1000); // 1초마다 메시지 전송
+
+            // 컴포넌트 언마운트 시 interval 해제
+            return () => {
+                clearInterval(interval);
+                console.log('Interval cleared');
+            };
+        }
+    }, [ws, getCookie(API_KEY_COOKIE_NAME)]); // `ws`가 변경될 때마다 실행
+
+    useEffect(() => {
+        if (queue.length > 0) {
+            const data = getLastData(2);
+            if (!!data) {
+                setAccountList(data.data);
+                setAsset(data.data.find((el: any) => el?.currency === 'KRW')?.balance);
+            }
+        }
+    }, [queue]);
+
+    const ListItem = memo(({ el }: { el: any }) => {
+        return (
+            <V.Row css={{ alignItems: 'center', gap: '10px' }}>
+                <AssetCard {...el} />
+            </V.Row>
+        );
+    });
+
+    const MemoizedList = memo(() => {
+        return (
+            <V.Column css={{ gap: '10px' }}>
+                {accountList.map((el) => (
+                    <ListItem key={el.currency} el={el} />
+                ))}
+            </V.Column>
+        );
     });
 
     return (
         <Panel title='자산 정보' css={{ width: '100%', maxWidth: '480px' }}>
             <Txt>보유자산: {Math.floor(asset)}</Txt>
-
-            <V.Column css={{ gap: '10px' }}>
-                {(data || []).map((el: any, key: number) => (
-                    <V.Row key={key} css={{ alignItems: 'center', gap: '10px' }}>
-                        <AssetCard {...el} />
-                    </V.Row>
-                ))}
-            </V.Column>
+            <MemoizedList />
         </Panel>
     );
 };

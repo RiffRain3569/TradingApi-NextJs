@@ -24,6 +24,9 @@ const nextConfig = {
     sitemapSize: 7000,
     changefreq: 'daily',
     priority: 0.5,
+    env: {
+        WEBSOCKET_PORT: process.env.WEBSOCKET_PORT,
+    },
     robotsTxtOptions: {
         additionalSitemaps: [`/server-sitemap.xml`],
         policies: [
