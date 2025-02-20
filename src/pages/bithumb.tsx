@@ -49,30 +49,25 @@ const Page = () => {
     //////////////////////////////////////////
     // test code
     useEffect(() => {
-        // 한국 시간 (KST) 오전 6시를 목표로 설정
-        const targetHour = 6;
+        // cron 돌릴 목표 시간
+        const targetHour = 13;
         const targetMinute = 1;
         const targetSecond = 0;
 
         const checkTimeAndRunTask = () => {
-            const currentTime = new Date();
-
-            // 한국 시간(KST) 계산
-            const kstOffset = 9 * 60; // 한국은 UTC +9
-            const kstTime = new Date(currentTime.getTime());
+            const kstTime = new Date();
 
             const hours = kstTime.getHours();
             const minutes = kstTime.getMinutes();
             const seconds = kstTime.getSeconds();
 
             if (hours === targetHour && minutes === targetMinute && seconds === targetSecond) {
-                console.log('한국시간 오전 6시가 되었습니다. 작업을 실행합니다.');
                 runTask();
             }
         };
 
         const runTask = () => {
-            fetch('/api/cron/six-oclock-top5');
+            fetch('/api/cron/top5');
         };
 
         // 1초마다 현재 시간을 확인
@@ -85,15 +80,14 @@ const Page = () => {
 
     return (
         <View>
-            <V.Row css={{ gap: 10, margin: '10px 0', flexWrap: 'wrap', alignItems: 'flex-start' }}>
-                <CandleTestPanel />
-
+            <V.Row css={{ gap: 10, margin: '10px 10px', flexWrap: 'wrap', alignItems: 'flex-start' }}>
                 <V.Column css={{ gap: 10 }}>
                     <ApiKeyInputPanel />
                     <AccountPanel />
                     <DetailPanel ticker={ticker} />
                 </V.Column>
                 <TickerPanel tickers={tickers || []} onRealtimeClick={(el) => setRealtime(el)} />
+                <CandleTestPanel />
             </V.Row>
         </View>
     );
