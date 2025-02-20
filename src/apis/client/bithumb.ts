@@ -1,6 +1,10 @@
 import { GET, POST } from '@/constants/httpMethod';
 import { bithumbPrivateApi, bithumbPublicApi } from '../fetchers/bithumb';
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Public
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 export const getCoins = async ({ markets }: { markets?: string }) => {
     return await bithumbPublicApi({
         uri: `/v1/market/all`,
@@ -16,6 +20,18 @@ export const getTicker = async ({ markets }: { markets: string }) => {
         reqData: { markets },
     });
 };
+
+export const getCandleMinute = async ({ market, to, count }: { market: string; to: string; count: number }) => {
+    return await bithumbPublicApi({
+        uri: `/v1/candles/minutes/1`,
+        method: GET,
+        reqData: { market, to, count },
+    });
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Private
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const getAccount = async () => {
     return await bithumbPrivateApi({

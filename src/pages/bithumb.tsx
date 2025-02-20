@@ -3,6 +3,7 @@ import { getCoins, getTicker } from '@/apis/client/bithumb';
 import View from '@/components/_layout/client/View';
 import AccountPanel from '@/components/client/bithumb/AccountPanel';
 import ApiKeyInputPanel from '@/components/client/bithumb/ApiKeyInputPanel';
+import CandleTestPanel from '@/components/client/bithumb/CandleTestPanel';
 import DetailPanel from '@/components/client/bithumb/DetailPanel';
 import TickerPanel from '@/components/client/bithumb/TickerPanel';
 import { targetTickerStore } from '@/store/bithumb';
@@ -85,6 +86,8 @@ const Page = () => {
     return (
         <View>
             <V.Row css={{ gap: 10, margin: '10px 0', flexWrap: 'wrap', alignItems: 'flex-start' }}>
+                <CandleTestPanel />
+
                 <V.Column css={{ gap: 10 }}>
                     <ApiKeyInputPanel />
                     <AccountPanel />
