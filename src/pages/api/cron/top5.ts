@@ -1,11 +1,11 @@
-import { getCoins, getTicker } from '@/apis/client/bithumb';
+import { getMarket, getTicker } from '@/apis/client/bithumb';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export const revalidate = 0;
 
 export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     console.log('Cron job is running...');
-    const markets = (await getCoins({})).filter((el: any) => el.market.split('-').at(0) === 'KRW');
+    const markets = (await getMarket({})).filter((el: any) => el.market.split('-').at(0) === 'KRW');
     const tickers = await getTicker({ markets: (markets || []).map((coin: any) => coin.market).join(',') });
 
     const mergedList = Object.values(

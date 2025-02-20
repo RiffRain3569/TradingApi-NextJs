@@ -45,7 +45,7 @@ const Page = () => {
     // test code
     useEffect(() => {
         // cron 돌릴 목표 시간
-        const targetHour = 13;
+        const targetHour = 6;
         const targetMinute = 1;
         const targetSecond = 0;
 

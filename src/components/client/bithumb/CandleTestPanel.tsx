@@ -13,7 +13,7 @@ const CandleTestPanel = ({}: Types) => {
 
     const testMutation = useMutation({
         mutationFn: async () => {
-            const to = '2025-02-20 10:00:00';
+            const to = '2025-02-21 08:01:00';
             const count = 120;
             let result = [];
 
@@ -34,7 +34,6 @@ const CandleTestPanel = ({}: Types) => {
                 const maxPercent = Math.floor(((maxPrice - priceList[index]) / priceList[index]) * 10000) / 100;
                 const minPercent = Math.floor(((minPrice - priceList[index]) / priceList[index]) * 10000) / 100;
                 const endPercent = Math.floor(((endPrice - priceList[index]) / priceList[index]) * 10000) / 100;
-                console.group();
                 setMessages((s) => [
                     ...s,
                     { market: data.at(0).market, maxPrice, minPrice, endPrice, maxPercent, minPercent, endPercent },
