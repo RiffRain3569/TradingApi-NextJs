@@ -5,6 +5,7 @@ export const revalidate = 0;
 
 export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     console.log('Cron job is running...');
+    console.log('current time:', new Date().toLocaleString());
     const markets = (await getMarket({})).filter((el: any) => el.market.split('-').at(0) === 'KRW');
     const tickers = await getTicker({ markets: (markets || []).map((coin: any) => coin.market).join(',') });
 

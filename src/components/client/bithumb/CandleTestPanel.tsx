@@ -2,18 +2,18 @@ import { Button, Panel, Txt, V } from '@/_ui';
 import { Input } from '@/_ui/input/Input';
 import { getCandleMinute } from '@/apis/client/bithumb';
 import { useMutation } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type Types = {};
 
 const CandleTestPanel = ({}: Types) => {
+    const [to, setTo] = useState('2025-02-22 06:01:00');
     const [priceList, setPriceList] = useState<number[]>([0, 0, 0, 0, 0]);
     const [marketList, setMarketList] = useState<string[]>(['', '', '', '', '']);
     const [message, setMessages] = useState<any[]>([]);
 
     const testMutation = useMutation({
         mutationFn: async () => {
-            const to = '2025-02-21 08:01:00';
             const count = 120;
             let result = [];
 
@@ -36,14 +36,59 @@ const CandleTestPanel = ({}: Types) => {
                 const endPercent = Math.floor(((endPrice - priceList[index]) / priceList[index]) * 10000) / 100;
                 setMessages((s) => [
                     ...s,
-                    { market: data.at(0).market, maxPrice, minPrice, endPrice, maxPercent, minPercent, endPercent },
+                    {
+                        market: data.at(0).market,
+                        maxPercent,
+                        minPercent,
+                        endPercent,
+                        copy: `     ${maxPercent}%, ${minPercent}%, ${endPercent}%     `,
+                    },
                 ]);
             }
         },
     });
 
+    //////////////////////////////////////////
+    // test code
+    useEffect(() => {
+        // cron 돌릴 목표 시간
+        const targetHour = 22;
+        const targetMinute = 1;
+        const targetSecond = 0;
+
+        const checkTimeAndRunTask = () => {
+            const kstTime = new Date();
+
+            const hours = kstTime.getHours();
+            const minutes = kstTime.getMinutes();
+            const seconds = kstTime.getSeconds();
+
+            if (hours === targetHour && minutes === targetMinute && seconds === targetSecond) {
+                runTask();
+            }
+        };
+
+        const runTask = () => {
+            fetch('/api/cron/top5');
+        };
+
+        // 1초마다 현재 시간을 확인
+        const intervalId = setInterval(checkTimeAndRunTask, 1000);
+
+        // 컴포넌트가 unmount되면 interval을 정리
+        return () => clearInterval(intervalId);
+    }, []);
+    //////////////////////////////////////////
+
     return (
         <Panel title='candle 테스트' css={{ minWidth: '300px' }}>
+            <Input label={`to`}>
+                <Input.TextField
+                    placeholder='yyyy-MM-dd HH:mm:ss'
+                    defaultValue={to}
+                    onChange={(e) => setTo(e.target.value)}
+                />
+            </Input>
             {marketList.map((_: any, key: number) => (
                 <V.Row key={key} css={{ padding: '10px', border: '1px solid white', gap: 10 }}>
                     <V.Column css={{ width: '200px' }}>
