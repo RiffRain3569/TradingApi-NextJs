@@ -41,38 +41,6 @@ const Page = () => {
         }
     }, [getLastData(1)]);
 
-    //////////////////////////////////////////
-    // test code
-    useEffect(() => {
-        // cron 돌릴 목표 시간
-        const targetHour = 6;
-        const targetMinute = 1;
-        const targetSecond = 0;
-
-        const checkTimeAndRunTask = () => {
-            const kstTime = new Date();
-
-            const hours = kstTime.getHours();
-            const minutes = kstTime.getMinutes();
-            const seconds = kstTime.getSeconds();
-
-            if (hours === targetHour && minutes === targetMinute && seconds === targetSecond) {
-                runTask();
-            }
-        };
-
-        const runTask = () => {
-            fetch('/api/cron/top5');
-        };
-
-        // 1초마다 현재 시간을 확인
-        const intervalId = setInterval(checkTimeAndRunTask, 1000);
-
-        // 컴포넌트가 unmount되면 interval을 정리
-        return () => clearInterval(intervalId);
-    }, []);
-    //////////////////////////////////////////
-
     return (
         <View>
             <V.Row css={{ gap: 10, margin: '10px 10px', flexWrap: 'wrap', alignItems: 'flex-start' }}>
