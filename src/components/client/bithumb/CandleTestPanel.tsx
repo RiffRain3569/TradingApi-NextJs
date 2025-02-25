@@ -8,13 +8,13 @@ type Types = {};
 
 const CandleTestPanel = ({}: Types) => {
     const [to, setTo] = useState('2025-02-22 06:01:00');
+    const [count, setCount] = useState(120);
     const [priceList, setPriceList] = useState<number[]>([0, 0, 0, 0, 0]);
     const [marketList, setMarketList] = useState<string[]>(['', '', '', '', '']);
     const [message, setMessages] = useState<any[]>([]);
 
     const testMutation = useMutation({
         mutationFn: async () => {
-            const count = 120;
             let result = [];
 
             for (const market of marketList) {
@@ -38,6 +38,7 @@ const CandleTestPanel = ({}: Types) => {
                     ...s,
                     {
                         market: data.at(0).market,
+                        endPrice,
                         maxPercent,
                         minPercent,
                         endPercent,
@@ -87,6 +88,14 @@ const CandleTestPanel = ({}: Types) => {
                     placeholder='yyyy-MM-dd HH:mm:ss'
                     defaultValue={to}
                     onChange={(e) => setTo(e.target.value)}
+                />
+            </Input>
+            <Input label={`count`}>
+                <Input.TextField
+                    type='number'
+                    placeholder='0'
+                    defaultValue={count}
+                    onChange={(e) => setCount(Number(e.target.value))}
                 />
             </Input>
             {marketList.map((_: any, key: number) => (
