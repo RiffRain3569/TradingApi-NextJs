@@ -19,15 +19,16 @@ const Page = () => {
     useEffect(() => {
         // WebSocket 연결이 되어있을 때만 1초마다 메시지를 전송
         if (ws) {
-            const interval = setInterval(() => {
-                ws.send(JSON.stringify({ id: 1, method: 'tickers' }));
-            }, 1000); // 1초마다 메시지 전송
+            ws.send(JSON.stringify({ id: 1, method: 'tickers' }));
+            // const interval = setInterval(() => {
+            //     ws.send(JSON.stringify({ id: 1, method: 'tickers' }));
+            // }, 1000); // 1초마다 메시지 전송
 
-            // 컴포넌트 언마운트 시 interval 해제
-            return () => {
-                clearInterval(interval);
-                console.log('Interval cleared');
-            };
+            // // 컴포넌트 언마운트 시 interval 해제
+            // return () => {
+            //     clearInterval(interval);
+            //     console.log('Interval cleared');
+            // };
         }
     }, [ws]); // `ws`가 변경될 때마다 실행
 
