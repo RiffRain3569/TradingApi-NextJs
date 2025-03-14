@@ -4,6 +4,7 @@ import AccountPanel from '@/components/client/bithumb/AccountPanel';
 import ApiKeyInputPanel from '@/components/client/bithumb/ApiKeyInputPanel';
 import CandleTestPanel from '@/components/client/bithumb/CandleTestPanel';
 import DetailPanel from '@/components/client/bithumb/DetailPanel';
+import ExcelTestPanel from '@/components/client/bithumb/ExcelTestPanel';
 import TickerPanel from '@/components/client/bithumb/TickerPanel';
 import { useWebsocket } from '@/hooks/useWebsocket';
 import { targetTickerStore } from '@/store/bithumb';
@@ -52,6 +53,7 @@ const Page = () => {
                 </V.Column>
                 <TickerPanel tickers={tickers} />
                 <CandleTestPanel />
+                <ExcelTestPanel />
             </V.Row>
         </View>
     );
